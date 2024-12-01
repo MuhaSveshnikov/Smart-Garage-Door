@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garage Door Control</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>Garage Door Control</h1>
+  <div id="authForm">
+    <input type="email" id="email" placeholder="Enter email" />
+    <input type="password" id="password" placeholder="Enter password" />
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <div id="garageContainer">
+    <div class="garage-door">
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+    </div>
+  </div>
+  <button id="openGarage" class="hidden styled-btn">Open/Close Garage Door</button>
+  <button id="logoutBtn" class="hidden styled-btn">Logout</button>
+
+  <footer>
+    <span></span>
+    <p>Powered by <a href="https://firebase.google.com" target="_blank">Firebase</a></p>
+  </footer>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyClmdEJlStE31NA_fFTqmCjZOvFhL3Qlu0",
+      authDomain: "garaza-3e795.firebaseapp.com",
+      databaseURL: "https://garaza-3e795-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "garaza-3e795",
+      storageBucket: "garaza-3e795.firebasestorage.app",
+      messagingSenderId: "1052443551442",
+      appId: "1:1052443551442:web:355879d38230f035146f0b",
+      measurementId: "G-01KBLVNJJX"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    // Elements
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const garageContainer = document.getElementById("garageContainer");
+    const openGarageButton = document.getElementById("openGarage");
+    const garageDoor = document.querySelector(".garage-door");
+
+    // Track garage door state (open or closed)
+    let garageState = 'closed'; // Initial state
+
+    // Garage door animation control
+    const openGarage = () => {
+      garageDoor.classList.add("open");
+      garageState = 'open'; // Update the state to 'open'
+    };
+
+    const closeGarage = () => {
+      garageDoor.classList.remove("open");
+      garageState = 'closed'; // Update the state to 'closed'
+    };
+
+    // Toggle door state on button click
+    openGarageButton.addEventListener("click", () => {
+      // Update Firebase with the new state
+      database.ref("/gateState").set(garageState === 'closed' ? 'open' : 'closed');
+    });
+
+    // Listen for changes in the gate state from Firebase
+    database.ref("/gateState").on("value", (snapshot) => {
+      const command = snapshot.val();
+      if (command === "open" && garageState === 'closed') {
+        openGarage(); // Open the door if it's currently closed
+      } else if (command === "closed" && garageState === 'open') {
+        closeGarage(); // Close the door if it's currently open
+      }
+    });
+
+    // Authentication functions
+    loginBtn.addEventListener("click", () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          console.log("Login successful");
+        })
+        .catch((error) => {
+          alert(`Login failed: ${error.message}`);
+        });
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      auth.signOut().then(() => {
+        console.log("Logout successful");
+      }).catch((error) => {
+        alert(`Logout failed: ${error.message}`);
+      });
+    });
+
+    // Handle authentication state changes
+    auth.onAuthStateChanged((user) => {
+      const authForm = document.getElementById("authForm");
+      if (user) {
+        console.log(`Logged in as: ${user.email}`);
+        garageContainer.classList.remove("hidden");
+        openGarageButton.classList.remove("hidden");
+        logoutBtn.classList.remove("hidden");
+        authForm.style.display = 'none'; // Hide auth form after login
+      } else {
+        console.log("User logged out");
+        garageContainer.classList.add("hidden");
+        openGarageButton.classList.add("hidden");
+        logoutBtn.classList.add("hidden");
+        authForm.style.display = 'flex'; // Show auth form again
+      }
+    });
+  </script>
+</body>
+
+</html>

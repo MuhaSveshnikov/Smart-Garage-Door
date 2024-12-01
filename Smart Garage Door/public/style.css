@@ -1,0 +1,164 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 2px;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f9;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
+  #authForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  #authForm input {
+    width: 80%;
+    max-width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+  }
+  
+  #authForm input:focus {
+    border-color: #007bff;
+  }
+  
+  #authForm button {
+    width: 60%;
+    max-width: 200px;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  
+  #authForm button:hover {
+    background: #0056b3;
+  }
+  
+  #authForm button:active {
+    background: #004494;
+  }
+  
+  /* Garage door container */
+  #garageContainer {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 20px auto;
+    border: 5px solid #555;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #f5f5f5, #d4d4d4);
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Garage door itself (contains the 4 rectangles) */
+  .garage-door {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; /* Adds equal space between rectangles */
+    padding: 10px 0; /* Adds padding to the top and bottom */
+    transition: transform 4s ease-in-out; /* Slow transition for opening */
+    transform-origin: top;
+  }
+  
+  /* Style for individual rectangles */
+  .garage-door .rectangle {
+    width: 100%;
+    height: calc(100% / 5); /* Reduced height for each rectangle */
+    background: #007bff; /* Initial color: deep blue */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* Stronger shadow for more depth */
+    border-radius: 10px; /* Rounded corners for modern look */
+    opacity: 1; /* Fully visible by default */
+    transition: background 4s ease-in-out, opacity 4s ease-in-out; /* Adjust for gradual color change */
+  }
+  
+  /* When the door is opening, rectangles fade from blue to white */
+  .garage-door.open .rectangle {
+    background: #fff; /* Turn all rectangles to white */
+    opacity: 0; /* Fade rectangles out */
+  }
+  
+  /* Add a delay for each rectangle to fade one by one, bottom to top */
+  .garage-door.open .rectangle:nth-child(4) {
+    transition-delay: 0s; /* Fourth rectangle starts fading immediately (bottom-most) */
+  }
+  
+  .garage-door.open .rectangle:nth-child(3) {
+    transition-delay: 1s; /* Third rectangle fades out after 1s */
+  }
+  
+  .garage-door.open .rectangle:nth-child(2) {
+    transition-delay: 2s; /* Second rectangle fades out after 2s */
+  }
+  
+  .garage-door.open .rectangle:nth-child(1) {
+    transition-delay: 3s; /* First rectangle fades out after 3s (top-most) */
+  }
+  
+  /* When the door is closed, keep spacing and make rectangles more visible with red color */
+  .garage-door:not(.open) .rectangle {
+    height: calc(100% / 5); /* Ensure the rectangles retain the correct reduced height */
+    background: linear-gradient(145deg, #e74c3c, #c0392b); /* Modern red gradient color */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Increased shadow for more depth */
+    border-radius: 8px; /* Slightly rounded corners */
+    opacity: 1; /* Make sure rectangles are visible when the door is closed */
+  }
+  
+  /* Hidden elements */
+  .hidden {
+    display: none;
+  }
+  
+  /* Styled Buttons */
+  .styled-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: #007bff;  /* Matches the login button's background color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Matches the login button's shadow */
+  }
+  
+  .styled-btn:hover {
+    background: #0056b3; /* Matches the login button's hover color */
+    transform: translateY(-2px);
+  }
+  
+  .styled-btn:active {
+    background: #004494; /* Matches the login button's active color */
+    transform: translateY(1px);
+  }
+  
